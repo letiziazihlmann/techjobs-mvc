@@ -23,5 +23,28 @@ public class SearchController {
     }
 
     // TODO #1 - Create handler to process search request and display results
+    @RequestMapping(value = "/results")
+    public String results(Model model, @RequestParam String searchType, @RequestParam String searchTerm) {
+        ArrayList <HashMap<String, String>> searchResults = new ArrayList();
 
+        //if statement to check if search type is all
+        if(searchType.equals("all")){
+            if(searchTerm != null){
+                searchResults = JobData.findByValue(searchTerm);
+            }else {
+                searchResults = JobData.findAll();
+            }
+        } else {
+            searchResults = JobData.findByColumnAndValue(searchType, searchTerm);
+        }
+            // if statement to see if SearchTerm is entered (searchTerm != null)
+                //do find by value only (call findByValue(searchTerm)
+            // else display all jobs
+        //else do searchByValueandColumn(searchTerm, searchType)
+
+
+        //add the searchResults to the model
+        model.addAttribute("searchResults", searchResults);
+        return "search";
+    }
 }
